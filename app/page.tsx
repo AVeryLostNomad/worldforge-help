@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ItemFilters, type FilterState } from "@/components/item-filters"
-import { ItemsTable } from "@/components/items-table"
-import { Pagination } from "@/components/pagination"
-import { Input } from "@/components/ui/input"
-import { Search, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react";
+import { ItemFilters, type FilterState } from "@/components/item-filters";
+import { ItemsTable } from "@/components/items-table";
+import { Pagination } from "@/components/pagination";
+import { Input } from "@/components/ui/input";
+import { Search, Loader2 } from "lucide-react";
 import { useBrowseStore } from "./store";
 
 export default function Home() {
   const searchQuery = useBrowseStore((state) => state.searchQuery);
   const setSearchQuery = useBrowseStore((state) => state.setSearchQuery);
+
   const currentPage = useBrowseStore((state) => state.currentPage);
   const setCurrentPage = useBrowseStore((state) => state.setCurrentPage);
   const items = useBrowseStore((state) => state.items);
@@ -35,7 +36,7 @@ export default function Home() {
   // Load items when page changes
   useEffect(() => {
     const searchDebounce = setTimeout(async () => {
-      setLoading(true)
+      setLoading(true);
       const res = await fetch('/api/items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,23 +44,27 @@ export default function Home() {
           page: currentPage,
           searchQuery: useBrowseStore.getState().searchQuery ?? '',
         }),
-      })
-      const response = await res.json()
-      setItems(response.items)
-      setTotalCount(response.totalCount)
-      setTotalPages(response.totalPages)
-      setLoading(false)
+      });
+      const response = await res.json();
+      setItems(response.items);
+      setTotalCount(response.totalCount);
+      setTotalPages(response.totalPages);
+      setLoading(false);
     }, 150);
 
     return () => clearTimeout(searchDebounce);
-  }, [needsSearch])
+  }, [needsSearch]);
+
+  useEffect(() => {
+    setNeedsSearch((prev) => prev + 1);
+  }, [searchQuery]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    setNeedsSearch((prev) => prev + 1)
+    setCurrentPage(page);
+    setNeedsSearch((prev) => prev + 1);
     // Scroll to top when changing pages
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,13 +107,11 @@ export default function Home() {
               </>
             )}
           </p>
+          {totalPages > 1 && (
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+          )}
         </div>
 
-        {totalPages > 1 && (
-          <div className="mb-6">
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-          </div>
-        )}
         {/* Items Table */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
@@ -126,5 +129,5 @@ export default function Home() {
         )}
       </div>
     </div>
-  )
+  );
 }
