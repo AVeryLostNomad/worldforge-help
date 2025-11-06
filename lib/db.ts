@@ -1,29 +1,26 @@
+'use server';
+
 import { PaginatedResponse } from '@/types';
 import { neon } from '@neondatabase/serverless';
 
-/**
- * Dummy async function to fetch paginated items from PostgreSQL
- *
- * TODO: Replace with actual PostgreSQL connection using:
- * - @neondatabase/serverless for Neon
- * - @supabase/supabase-js for Supabase
- * - pg for standard PostgreSQL
- */
 export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Promise<PaginatedResponse> {
-  const sql = neon('postgresql://anonymous@ep-quiet-voice-a4ykcsol-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require');
+  const connectionString = process.env.NEON_DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('Missing NEON_DATABASE_URL (or DATABASE_URL) environment variable');
+  }
+  const sql = neon(connectionString);
   const offset = (page - 1) * pageSize;
 
   const wheres = [];
   if (searchQuery) {
-    wheres.push(`LOWER(data->>'name') LIKE LOWER('%${searchQuery}%')`);
+    wheres.push(`data->>'name' ILIKE '%${searchQuery}%'`);
   }
 
-  const whereClause = wheres.length > 0 ? `WHERE ${wheres.join(' AND ')}` : '';
+  const whereClause = wheres.length > 0 ? sql`WHERE ${wheres.join(' AND ')}` : sql``;
 
   const items = await sql`
     SELECT * FROM items
     ${whereClause}
-    ORDER BY data->>'name'
     LIMIT ${pageSize}
     OFFSET ${offset}
   `;
@@ -35,11 +32,12 @@ export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Pro
 
   const totalPages = Math.ceil(count / pageSize);
 
-  return {
+  const toReturn = {
     items: items.map((item) => item.data),
     totalCount: count,
     page,
     pageSize,
     totalPages,
   };
+  return toReturn;
 }

@@ -6,7 +6,6 @@ import { ItemsTable } from "@/components/items-table"
 import { Pagination } from "@/components/pagination"
 import { Input } from "@/components/ui/input"
 import { Search, Loader2 } from "lucide-react"
-import { fetchItems } from "@/lib/db"
 import { useBrowseStore } from "./store";
 
 export default function Home() {
@@ -37,11 +36,15 @@ export default function Home() {
   useEffect(() => {
     const searchDebounce = setTimeout(async () => {
       setLoading(true)
-      const response = await fetchItems(
-        currentPage, 
-        50,
-        useBrowseStore.getState().searchQuery
-      )
+      const res = await fetch('/api/items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          page: currentPage,
+          searchQuery: useBrowseStore.getState().searchQuery ?? '',
+        }),
+      })
+      const response = await res.json()
       setItems(response.items)
       setTotalCount(response.totalCount)
       setTotalPages(response.totalPages)
@@ -101,6 +104,11 @@ export default function Home() {
           </p>
         </div>
 
+        {totalPages > 1 && (
+          <div className="mb-6">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+          </div>
+        )}
         {/* Items Table */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
@@ -111,7 +119,7 @@ export default function Home() {
         )}
 
         {/* Pagination */}
-        {!loading && totalPages > 1 && (
+        {totalPages > 1 && (
           <div className="mt-6">
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
           </div>
