@@ -1,9 +1,12 @@
-"use client"
+"use client";
 
-import type { Item } from "@/lib/db"
+import { cn } from "@/lib/utils";
+import { Item } from "@/types";
+import { useEffect, useState } from "react";
 
 interface ItemTooltipProps {
-  item: Item
+  item: Item;
+  initialOpenAbove?: boolean;
 }
 
 const qualityColors: Record<string, string> = {
@@ -11,13 +14,52 @@ const qualityColors: Record<string, string> = {
   Rare: "text-blue-400",
   Uncommon: "text-green-400",
   Common: "text-white",
-}
+};
 
-export function ItemTooltip({ item }: ItemTooltipProps) {
+export function ItemTooltip({ item, initialOpenAbove }: ItemTooltipProps) {
+  const [openAbove, setOpenAbove] = useState<boolean>(initialOpenAbove ?? false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const viewportMidY = window.innerHeight / 2;
+      setOpenAbove(e.clientY > viewportMidY);
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <div className="absolute z-50 w-80 rounded-lg border-2 border-gray-700 bg-gradient-to-b from-gray-900 to-black p-3 text-sm shadow-2xl pointer-events-none">
+    <div className={cn(
+      `absolute left-0`,
+      openAbove
+        ? "bottom-full mb-2"
+        : "top-full mt-2",
+      "z-50",
+      "w-80",
+      "rounded-lg",
+      "border-2",
+      "border-gray-700",
+      "bg-linear-to-b",
+      "from-gray-900",
+      "to-black",
+      "p-3",
+      "text-sm",
+      "shadow-2xl",
+      "pointer-events-none",
+      "text-wrap"
+    )}
+    >
       {/* Item Name */}
-      <div className={`text-base font-bold mb-1 ${qualityColors[item.quality] || "text-white"}`}>{item.name}</div>
+      <div
+        className={cn(
+          "text-base",
+          "font-bold",
+          "mb-1",
+          qualityColors[item.quality] || "text-white"
+        )}
+      >
+        {item.name}
+      </div>
 
       {/* Binding */}
       {item.binding && <div className="text-white text-xs mb-1">{item.binding}</div>}
@@ -62,7 +104,7 @@ export function ItemTooltip({ item }: ItemTooltipProps) {
                 <div key={stat} className="text-green-400 text-xs">
                   +{value} {stat}
                 </div>
-              )
+              );
             }
             // Handle text stats (like "Equip:" effects)
             const isEquipEffect =
@@ -70,14 +112,14 @@ export function ItemTooltip({ item }: ItemTooltipProps) {
               (value.includes("Increases") ||
                 value.includes("Improves") ||
                 value.includes("Restores") ||
-                value.includes("chance"))
+                value.includes("chance"));
 
             return (
-              <div key={stat} className={`text-xs break-words ${isEquipEffect ? "text-green-400" : "text-white"}`}>
+              <div key={stat} className={`text-xs wrap-break-word ${isEquipEffect ? "text-green-400" : "text-white"}`}>
                 {isEquipEffect && "Equip: "}
                 {value}
               </div>
-            )
+            );
           })}
         </div>
       )}
@@ -93,5 +135,5 @@ export function ItemTooltip({ item }: ItemTooltipProps) {
         <div className="text-orange-400 text-xs">ID {item.id}</div>
       </div>
     </div>
-  )
+  );
 }
