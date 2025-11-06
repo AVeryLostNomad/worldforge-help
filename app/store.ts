@@ -1,0 +1,32 @@
+import { Item } from '@/types';
+import { create } from 'zustand';
+
+interface BrowseStore {
+  searchQuery: string;
+  setSearchQuery: (searchQuery: string) => void;
+  currentPage: number;
+  setCurrentPage: (currentPage: number) => void;
+  items: Item[];
+  setItems: (items: Item[]) => void;
+  totalCount: number;
+  setTotalCount: (totalCount: number) => void;
+  totalPages: number;
+  setTotalPages: (totalPages: number) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+}
+
+export const useBrowseStore = create<BrowseStore>((set) => ({
+  searchQuery: '',
+  setSearchQuery: (searchQuery) => set({ searchQuery }),
+  currentPage: 1,
+  setCurrentPage: (currentPage) => set({ currentPage }),
+  items: [],
+  setItems: (items) => set({ items }),
+  totalCount: 0,
+  setTotalCount: (totalCount) => set({ totalCount }),
+  totalPages: 0,
+  setTotalPages: (totalPages) => set({ totalPages }),
+  loading: false,
+  setLoading: (loading) => set({ loading }),
+}));
