@@ -2,18 +2,22 @@ import { Item } from '@/types';
 import { create } from 'zustand';
 
 interface BrowseStore {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+
   searchQuery: string;
   setSearchQuery: (searchQuery: string) => void;
+
   currentPage: number;
   setCurrentPage: (currentPage: number) => void;
+
   items: Item[];
   setItems: (items: Item[]) => void;
+
   totalCount: number;
   setTotalCount: (totalCount: number) => void;
   totalPages: number;
   setTotalPages: (totalPages: number) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
 }
 
 export const useBrowseStore = create<BrowseStore>((set) => ({

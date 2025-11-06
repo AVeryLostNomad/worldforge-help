@@ -1,6 +1,7 @@
 export interface Item {
   id: number;
   name: string;
+  coords: number[];
   slotType: string;
   slot: string;
   quality: string;

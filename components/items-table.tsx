@@ -11,11 +11,14 @@ interface ItemsTableProps {
 }
 
 const qualityColors: Record<string, string> = {
-  Epic: "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/50",
-  Rare: "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/50",
-  Uncommon: "bg-green-500/20 text-green-700 dark:text-green-300 border-green-500/50",
   Common: "bg-gray-500/20 text-gray-700 dark:text-gray-300 border-gray-500/50",
+  Uncommon: "bg-green-500/20 text-green-700 dark:text-green-300 border-green-500/50",
+  Rare: "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/50",
+  Epic: "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/50",
+  Legendary: "bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-500/50",
+  Artifact: "bg-yellow-400/20 text-yellow-900 dark:text-yellow-200 border-yellow-300/70",
 }
+
 
 export function ItemsTable({ items }: ItemsTableProps) {
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null)
@@ -32,7 +35,7 @@ export function ItemsTable({ items }: ItemsTableProps) {
             <TableHead className="text-card-foreground">Req. Level</TableHead>
             <TableHead className="text-card-foreground">Item Level</TableHead>
             <TableHead className="text-card-foreground">Damage</TableHead>
-            <TableHead className="text-card-foreground">Binding</TableHead>
+            <TableHead className="text-card-foreground">Zone</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -44,7 +47,7 @@ export function ItemsTable({ items }: ItemsTableProps) {
             </TableRow>
           ) : (
             items.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow key={`${item.id}-${item.quality}-${item.itemLevel}-${item.zone}`}>
                 <TableCell
                   className="font-medium text-card-foreground relative cursor-pointer"
                   onMouseEnter={() => setHoveredItemId(item.id)}
@@ -75,7 +78,7 @@ export function ItemsTable({ items }: ItemsTableProps) {
                     <span className="text-muted-foreground">—</span>
                   )}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{item.binding}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{item.zone}</TableCell>
               </TableRow>
             ))
           )}

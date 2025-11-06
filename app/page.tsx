@@ -49,7 +49,7 @@ export default function Home() {
       setTotalCount(response.totalCount)
       setTotalPages(response.totalPages)
       setLoading(false)
-    }, 450);
+    }, 150);
 
     return () => clearTimeout(searchDebounce);
   }, [needsSearch])

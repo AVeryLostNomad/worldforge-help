@@ -21,6 +21,7 @@ export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Pro
   const items = await sql`
     SELECT * FROM items
     ${whereClause}
+    ORDER BY data->>'name' ASC, data->>'itemLevel' ASC
     LIMIT ${pageSize}
     OFFSET ${offset}
   `;
