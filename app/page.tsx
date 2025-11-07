@@ -83,7 +83,6 @@ export default function Home() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
-              disabled={loading}
             />
           </div>
         </div>

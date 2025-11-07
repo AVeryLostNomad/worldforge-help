@@ -16,7 +16,7 @@ export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Pro
     wheres.push(`data->>'name' ILIKE '%${searchQuery}%'`);
   }
 
-  const whereClause = wheres.length > 0 ? sql`WHERE ${wheres.join(' AND ')}` : sql``;
+  const whereClause = wheres.length > 0 ? sql.unsafe(`WHERE ${wheres.join(' AND ')}`) : sql``;
 
   const items = await sql`
     SELECT * FROM items
@@ -31,11 +31,11 @@ export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Pro
     ${whereClause}
   `;
 
-  const totalPages = Math.ceil(count / pageSize);
+  const totalPages = Math.ceil(parseInt(count, 10) / pageSize);
 
   const toReturn = {
     items: items.map((item) => item.data),
-    totalCount: count,
+    totalCount: parseInt(count, 10),
     page,
     pageSize,
     totalPages,

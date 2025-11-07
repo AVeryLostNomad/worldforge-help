@@ -21,7 +21,7 @@ interface BrowseStore {
 }
 
 export const useBrowseStore = create<BrowseStore>((set) => ({
-  searchQuery: '',
+  searchQuery: 'Mal',
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   currentPage: 1,
   setCurrentPage: (currentPage) => set({ currentPage }),

@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { ItemTooltip } from "./item-tooltip"
-import { useState } from "react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { ItemTooltip } from "./item-tooltip";
+import { useState } from "react";
 import { Item } from "@/types";
 
 interface ItemsTableProps {
-  items: Item[]
+  items: Item[];
 }
 
 const qualityColors: Record<string, string> = {
@@ -17,12 +17,12 @@ const qualityColors: Record<string, string> = {
   Epic: "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/50",
   Legendary: "bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-500/50",
   Artifact: "bg-yellow-400/20 text-yellow-900 dark:text-yellow-200 border-yellow-300/70",
-}
+};
 
 
 export function ItemsTable({ items }: ItemsTableProps) {
-  const [hoveredItemId, setHoveredItemId] = useState<number | null>(null)
-  const [openAboveOnHover, setOpenAboveOnHover] = useState<boolean>(false)
+  const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
+  const [openAboveOnHover, setOpenAboveOnHover] = useState<boolean>(false);
 
   return (
     <div className="rounded-lg border border-border bg-card">
@@ -47,14 +47,14 @@ export function ItemsTable({ items }: ItemsTableProps) {
               </TableCell>
             </TableRow>
           ) : (
-            items.map((item) => (
-              <TableRow key={`${item.id}-${item.quality}-${item.itemLevel}-${item.zone}`}>
+            items.map((item, idx) => (
+              <TableRow key={`${item.id}-${item.quality}-${item.itemLevel}-${item.zone}`} className="relative">
                 <TableCell
                   className="font-medium text-card-foreground relative cursor-pointer"
                   onMouseEnter={(e) => {
-                    const viewportMidY = window.innerHeight / 2
-                    setOpenAboveOnHover(e.clientY > viewportMidY)
-                    setHoveredItemId(item.id)
+                    const viewportMidY = window.innerHeight / 2;
+                    setOpenAboveOnHover(e.clientY > viewportMidY);
+                    setHoveredItemId(item.id);
                   }}
                   onMouseLeave={() => setHoveredItemId(null)}
                 >
@@ -88,5 +88,5 @@ export function ItemsTable({ items }: ItemsTableProps) {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
