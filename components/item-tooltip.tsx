@@ -3,10 +3,12 @@
 import { cn } from "@/lib/utils";
 import { Item } from "@/types";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ItemTooltipProps {
   item: Item;
   initialOpenAbove?: boolean;
+  anchorRect: { left: number; top: number; bottom: number; };
 }
 
 const qualityColors: Record<string, string> = {
@@ -16,8 +18,13 @@ const qualityColors: Record<string, string> = {
   Common: "text-white",
 };
 
-export function ItemTooltip({ item, initialOpenAbove }: ItemTooltipProps) {
+export function ItemTooltip({ item, initialOpenAbove, anchorRect }: ItemTooltipProps) {
   const [openAbove, setOpenAbove] = useState<boolean>(initialOpenAbove ?? false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -28,26 +35,37 @@ export function ItemTooltip({ item, initialOpenAbove }: ItemTooltipProps) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  return (
-    <div className={cn(
-      `absolute left-0`,
-      openAbove
-        ? "bottom-full mb-2"
-        : "top-full mt-2",
-      "z-50",
-      "w-80",
-      "rounded-lg",
-      "border-2",
-      "border-gray-700",
-      "bg-linear-to-b",
-      "from-gray-900",
-      "to-black",
-      "p-3",
-      "text-sm",
-      "shadow-2xl",
-      "pointer-events-none",
-      "text-wrap"
-    )}
+  if (!isMounted) return null;
+
+  const GAP = 8; // px
+  const tooltipWidthPx = 320; // Tailwind w-80 = 20rem ≈ 320px at 16px root
+  const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 0;
+  const leftClamped = Math.max(8, Math.min(anchorRect.left, viewportWidth - tooltipWidthPx - 8));
+  const top = openAbove ? anchorRect.top - GAP : anchorRect.bottom + GAP;
+
+  return createPortal(
+    <div
+      className={cn(
+        "z-50",
+        "w-80",
+        "rounded-lg",
+        "border-2",
+        "border-gray-700",
+        "bg-linear-to-b",
+        "from-gray-900",
+        "to-black",
+        "p-3",
+        "text-sm",
+        "shadow-2xl",
+        "pointer-events-none",
+        "text-wrap"
+      )}
+      style={{
+        position: "fixed",
+        left: leftClamped,
+        top,
+        transform: openAbove ? "translateY(-100%)" : undefined,
+      }}
     >
       {/* Item Name */}
       <div
@@ -134,6 +152,7 @@ export function ItemTooltip({ item, initialOpenAbove }: ItemTooltipProps) {
       <div className="border-t border-gray-700 pt-1 mt-1">
         <div className="text-orange-400 text-xs">ID {item.id}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

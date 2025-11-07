@@ -23,6 +23,7 @@ const qualityColors: Record<string, string> = {
 export function ItemsTable({ items }: ItemsTableProps) {
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
   const [openAboveOnHover, setOpenAboveOnHover] = useState<boolean>(false);
+  const [anchorRect, setAnchorRect] = useState<{ left: number; top: number; bottom: number; } | null>(null);
 
   return (
     <div className="rounded-lg border border-border bg-card">
@@ -55,12 +56,14 @@ export function ItemsTable({ items }: ItemsTableProps) {
                     const viewportMidY = window.innerHeight / 2;
                     setOpenAboveOnHover(e.clientY > viewportMidY);
                     setHoveredItemId(item.id);
+                    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                    setAnchorRect({ left: rect.left, top: rect.top, bottom: rect.bottom });
                   }}
-                  onMouseLeave={() => setHoveredItemId(null)}
+                  onMouseLeave={() => { setHoveredItemId(null); setAnchorRect(null); }}
                 >
                   <span className={hoveredItemId === item.id ? "underline" : ""}>{item.name}</span>
-                  {hoveredItemId === item.id && (
-                    <ItemTooltip item={item} initialOpenAbove={openAboveOnHover} />
+                  {hoveredItemId === item.id && anchorRect && (
+                    <ItemTooltip item={item} initialOpenAbove={openAboveOnHover} anchorRect={anchorRect} />
                   )}
                 </TableCell>
                 <TableCell>
