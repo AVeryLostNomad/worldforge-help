@@ -3,7 +3,7 @@
 import { PaginatedResponse } from '@/types';
 import { neon } from '@neondatabase/serverless';
 
-export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Promise<PaginatedResponse> {
+export async function fetchItems(page = 1, pageSize = 50, searchQuery = '', embeddings: number[] | undefined = undefined): Promise<PaginatedResponse> {
   const connectionString = process.env.NEON_DATABASE_URL;
   if (!connectionString) {
     throw new Error('Missing NEON_DATABASE_URL (or DATABASE_URL) environment variable');
@@ -18,10 +18,14 @@ export async function fetchItems(page = 1, pageSize = 50, searchQuery = ''): Pro
 
   const whereClause = wheres.length > 0 ? sql.unsafe(`WHERE ${wheres.join(' AND ')}`) : sql``;
 
+  const embeddingSelect = embeddings ? sql.unsafe(`, embedding <-> '[${embeddings.join(',')}]' as distance`) : sql``;
+  const embeddingOrder = embeddings ? sql`distance,` : sql``;
+
   const items = await sql`
-    SELECT * FROM items
+    SELECT * ${embeddingSelect}
+    FROM items
     ${whereClause}
-    ORDER BY data->>'name' ASC, data->>'itemLevel' ASC
+    ORDER BY ${embeddingOrder} data->>'name' ASC, data->>'itemLevel' ASC
     LIMIT ${pageSize}
     OFFSET ${offset}
   `;
