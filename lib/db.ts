@@ -63,13 +63,19 @@ export async function fetchItems(page = 1,
 
   if (filters && filters.length > 0) {
     filters.forEach((filter) => {
-      if (filter.in && filter.in.length > 0) {
+      if ('in' in filter && filter.in && filter.in.length > 0) {
         switch (filter.type) {
           case OptionType.Zone:
             wheres.push(`data->>'zone' IN ('${filter.in.join("','")}')`);
             break;
           case OptionType.Quality:
             wheres.push(`data->>'quality' IN ('${filter.in.join("','")}')`);
+            break;
+        }
+      } else if ('min' in filter && 'max' in filter) {
+        switch (filter.type) {
+          case OptionType.ItemLevel:
+            wheres.push(`(data->>'itemLevel')::int >= ${filter.min} AND (data->>'itemLevel')::int <= ${filter.max}`);
             break;
         }
       }

@@ -1,4 +1,4 @@
-import { Filter, Item, OptionType } from '@/types';
+import { Filter, Item, OptionType, RangeFilter } from '@/types';
 import { create } from 'zustand';
 
 interface BrowseStore {

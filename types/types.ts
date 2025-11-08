@@ -31,11 +31,18 @@ export interface PaginatedResponse {
 export enum OptionType {
   Zone = 'zone',
   Quality = 'quality',
+  ItemLevel = 'itemLevel',
 }
 
-export type Filter = InFilters;
+export type Filter = InFilters | RangeFilter;
 
 type InFilters = {
   type: OptionType.Zone | OptionType.Quality;
   in: string[];
+};
+
+export type RangeFilter = {
+  type: OptionType.ItemLevel;
+  min: number;
+  max: number;
 };

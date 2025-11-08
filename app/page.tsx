@@ -48,6 +48,8 @@ export default function Home() {
       const advSearch = useBrowseStore.getState().advancedSearch;
       const filters = useBrowseStore.getState().filters;
 
+      const allFilters = [...Object.values(filters)];
+
       const res = await fetch('/api/items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -55,7 +57,7 @@ export default function Home() {
           page: currentPage,
           searchQuery: useBrowseStore.getState().searchQuery,
           advancedSearch: advSearch,
-          filters: Object.values(filters)
+          filters: allFilters
         }),
       });
       const response = await res.json();
@@ -110,10 +112,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Filters - Currently not functional with pagination */}
-        <div className="mb-6 opacity-50 pointer-events-none flex flex-row gap-4 flex-wrap">
+        {/* Filters */}
+        <div className="mb-6 flex flex-row gap-4 flex-wrap">
           <FilterSelect type={OptionType.Zone} />
           <FilterSelect type={OptionType.Quality} />
+          <ItemLevelFilter />
         </div>
 
         {/* Results Count */}
