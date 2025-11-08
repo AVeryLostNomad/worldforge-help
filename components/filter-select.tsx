@@ -1,4 +1,4 @@
-import { OptionType } from "@/types";
+import { Filter, OptionType } from "@/types";
 import { MultiSelect, MultiSelectOption } from "./ui/multi-select";
 import { useEffect, useState } from "react";
 import { useBrowseStore } from "@/app/store";
@@ -41,13 +41,14 @@ export const FilterSelect = (props: FilterSelectProps) => {
           case OptionType.SlotType:
           case OptionType.ItemType:
           case OptionType.Slot:
+          case OptionType.PrimaryStats:
             setFilters((prev) => {
               const newFilters = { ...prev };
               if (value && value.length > 0) {
                 newFilters[props.type] = {
                   type: props.type,
                   in: value
-                };
+                } as Filter;
               } else {
                 delete newFilters[props.type];
               }
