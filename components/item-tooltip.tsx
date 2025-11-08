@@ -142,6 +142,40 @@ export function ItemTooltip({ item, initialOpenAbove, anchorRect }: ItemTooltipP
         </div>
       )}
 
+      {/* Class Restrictions */}
+      {item.classRestrictions && item.classRestrictions.length > 0 && (
+        <div className="border-t border-gray-700 pt-1 mt-1">
+          <div className="text-yellow-400 text-xs">
+            Classes: {item.classRestrictions.join(", ")}
+          </div>
+        </div>
+      )}
+
+      {/* Descriptions */}
+      {item.descriptions && item.descriptions.length > 0 && (
+        <div className="border-t border-gray-700 pt-1 mt-1 space-y-1">
+          {item.descriptions.map((desc, index) => (
+            <div key={index} className="space-y-0.5">
+              {desc.name && (
+                <div className="text-cyan-400 text-xs font-semibold">
+                  {desc.name}
+                </div>
+              )}
+              {desc.cooldown && (
+                <div className="text-gray-300 text-xs">
+                  {desc.cooldown}
+                </div>
+              )}
+              {desc.description && (
+                <div className="text-white text-xs">
+                  {desc.description}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Requirements */}
       <div className="border-t border-gray-700 pt-1 mt-1">
         <div className="text-white text-xs">Requires Level {item.requiredLevel}</div>

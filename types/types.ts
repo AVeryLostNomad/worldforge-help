@@ -18,6 +18,12 @@ export interface Item {
   };
   primaryStats?: Record<string, number>;
   secondaryStats?: Record<string, string | number>;
+  classRestrictions?: string[];
+  descriptions?: Array<{
+    name?: string;
+    cooldown?: string;
+    description?: string;
+  }>;
 }
 
 export interface PaginatedResponse {
