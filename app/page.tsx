@@ -120,19 +120,21 @@ export default function Home() {
         </div>
 
         {/* Filters */}
-        <div className="mb-6 flex flex-row gap-4 flex-wrap">
-          <FilterSelect type={OptionType.Zone} />
-          <FilterSelect type={OptionType.Quality} />
-          <FilterSelect type={OptionType.SlotType} />
-          <FilterSelect type={OptionType.ItemType} />
-          <FilterSelect type={OptionType.Slot} />
-          <FilterSelect type={OptionType.PrimaryStats} />
-          <FilterSelect type={OptionType.SecondaryStats} />
-          <ItemLevelFilter />
-          <RequiredLevelFilter />
-          <DPSFilter />
-          <SpeedFilter />
-        </div>
+        {advancedSearch && (
+          <div className="mb-6 flex flex-row gap-4 flex-wrap">
+            <FilterSelect type={OptionType.Zone} />
+            <FilterSelect type={OptionType.Quality} />
+            <FilterSelect type={OptionType.SlotType} />
+            <FilterSelect type={OptionType.ItemType} />
+            <FilterSelect type={OptionType.Slot} />
+            <FilterSelect type={OptionType.PrimaryStats} />
+            <FilterSelect type={OptionType.SecondaryStats} />
+            <ItemLevelFilter />
+            <RequiredLevelFilter />
+            <DPSFilter />
+            <SpeedFilter />
+          </div>
+        )}
 
         {/* Results Count */}
         <div className="mb-4 flex items-center justify-between">
