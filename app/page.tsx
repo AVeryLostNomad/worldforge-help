@@ -10,6 +10,7 @@ import { useBrowseStore } from "./store";
 import { Toggle } from "@/components/ui/toggle";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { FilterSelect } from "@/components/filter-select";
+import { ItemLevelFilter } from "@/components/item-level-filter";
 import { OptionType } from "@/types";
 
 export default function Home() {
