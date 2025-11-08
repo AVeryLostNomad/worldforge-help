@@ -1,7 +1,34 @@
 'use server';
 
-import { PaginatedResponse } from '@/types';
+import { OptionType, PaginatedResponse } from '@/types';
 import { neon } from '@neondatabase/serverless';
+
+export async function fetchDistinctOptions(type: OptionType): Promise<{ label: string, value: string; }[]> {
+  const connectionString = process.env.NEON_DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('Missing NEON_DATABASE_URL (or DATABASE_URL) environment variable');
+  }
+  const sql = neon(connectionString);
+
+  switch (type) {
+    case OptionType.Zone:
+      const zones = await sql`
+        SELECT DISTINCT data->>'zone' as name
+        FROM items
+        ORDER BY name ASC
+      `;
+      return zones
+        .map((zone) => zone.name)
+        .filter((name): name is string => name !== undefined && !!name)
+        .map((name) => ({
+          label: name,
+          value: name
+        }));
+    default:
+      throw new Error(`Unsupported option type: ${type}`);
+      return [];
+  }
+}
 
 export async function fetchItems(page = 1, pageSize = 50, searchQuery = '', embeddings: number[] | undefined = undefined): Promise<PaginatedResponse> {
   const connectionString = process.env.NEON_DATABASE_URL;

@@ -27,3 +27,7 @@ export interface PaginatedResponse {
   pageSize: number;
   totalPages: number;
 }
+
+export enum OptionType {
+  Zone = 'zone',
+}

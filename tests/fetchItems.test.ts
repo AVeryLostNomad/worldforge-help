@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { pipeline } from "@xenova/transformers";
 
 import { fetchItems } from '@/lib/db';
+import { OptionType } from '@/types';
 
 describe('fetchItems (server)', () => {
   it('returns items and pagination structure', async () => {
@@ -29,5 +30,18 @@ describe('fetchItems (server)', () => {
     expect(result.page).toBeGreaterThanOrEqual(1);
     expect(result.items.length).toBeGreaterThan(0);
     expect(result.items[0].name).toBe('Windsong Totem');
+  });
+
+  it('fetchDistinctOptions returns zones as expected', async () => {
+    // We import fetchDistinctOptions directly to test its result for the "zone" type
+    // Since the test environment may not support absolute imports, we use a dynamic import
+    const { fetchDistinctOptions } = await import('@/lib/db');
+    const zoneOptions = await fetchDistinctOptions(OptionType.Zone);
+
+    console.log(zoneOptions);
+
+    expect(zoneOptions).toBeDefined();
+    expect(Array.isArray(zoneOptions)).toBe(true);
+    expect(zoneOptions.length).toBeGreaterThan(0);
   });
 });

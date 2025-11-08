@@ -8,6 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Search, Loader2, SettingsIcon } from "lucide-react";
 import { useBrowseStore } from "./store";
 import { Toggle } from "@/components/ui/toggle";
+import MultipleSelector from "@/components/ui/multiple-selector";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { FilterSelect } from "@/components/filter-select";
+import { OptionType } from "@/types";
 
 export default function Home() {
   const searchQuery = useBrowseStore((state) => state.searchQuery);
@@ -106,7 +110,7 @@ export default function Home() {
 
         {/* Filters - Currently not functional with pagination */}
         <div className="mb-6 opacity-50 pointer-events-none">
-          {/* <ItemFilters filters={filters} onFilterChange={setFilters} availableFilters={availableFilters} /> */}
+          <FilterSelect type={OptionType.Zone} />
         </div>
 
         {/* Results Count */}
