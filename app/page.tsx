@@ -127,6 +127,7 @@ export default function Home() {
           <FilterSelect type={OptionType.ItemType} />
           <FilterSelect type={OptionType.Slot} />
           <FilterSelect type={OptionType.PrimaryStats} />
+          <FilterSelect type={OptionType.SecondaryStats} />
           <ItemLevelFilter />
           <RequiredLevelFilter />
           <DPSFilter />

@@ -42,6 +42,7 @@ export enum OptionType {
   ItemType = 'itemType',
   Slot = 'slot',
   PrimaryStats = 'primaryStats',
+  SecondaryStats = 'secondaryStats',
   ItemLevel = 'itemLevel',
   RequiredLevel = 'requiredLevel',
   DPS = 'dps',
@@ -51,7 +52,7 @@ export enum OptionType {
 export type Filter = InFilters | RangeFilter;
 
 type InFilters = {
-  type: OptionType.Zone | OptionType.Quality | OptionType.SlotType | OptionType.ItemType | OptionType.Slot | OptionType.PrimaryStats;
+  type: OptionType.Zone | OptionType.Quality | OptionType.SlotType | OptionType.ItemType | OptionType.Slot | OptionType.PrimaryStats | OptionType.SecondaryStats;
   in: string[];
 };
 

@@ -89,6 +89,19 @@ export async function fetchDistinctOptions(type: OptionType): Promise<{ label: s
           label: name,
           value: name
         }));
+    case OptionType.SecondaryStats:
+      const secondaryStats = await sql`
+        SELECT DISTINCT jsonb_object_keys(data->'secondaryStats') as name
+        FROM items
+        WHERE jsonb_typeof(data->'secondaryStats') = 'object'
+      `;
+      return secondaryStats
+        .map((stat) => stat.name)
+        .filter((name): name is string => name !== undefined && !!name)
+        .map((name) => ({
+          label: name,
+          value: name
+        }));
     default:
       throw new Error(`Unsupported option type: ${type}`);
       return [];
@@ -136,6 +149,11 @@ export async function fetchItems(page = 1,
             // Use PostgreSQL's ?| operator to check if any of the selected keys exist in the primaryStats object
             const statKeys = filter.in.map(key => `'${key.replace(/'/g, "''")}'`).join(',');
             wheres.push(`data->'primaryStats' ?| array[${statKeys}]`);
+            break;
+          case OptionType.SecondaryStats:
+            // Use PostgreSQL's ?| operator to check if any of the selected keys exist in the secondaryStats object
+            const secondaryStatKeys = filter.in.map(key => `'${key.replace(/'/g, "''")}'`).join(',');
+            wheres.push(`data->'secondaryStats' ?| array[${secondaryStatKeys}]`);
             break;
         }
       } else if ('min' in filter && 'max' in filter) {

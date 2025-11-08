@@ -42,6 +42,7 @@ export const FilterSelect = (props: FilterSelectProps) => {
           case OptionType.ItemType:
           case OptionType.Slot:
           case OptionType.PrimaryStats:
+          case OptionType.SecondaryStats:
             setFilters((prev) => {
               const newFilters = { ...prev };
               if (value && value.length > 0) {
