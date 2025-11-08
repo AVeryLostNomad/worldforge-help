@@ -1,4 +1,4 @@
-import { Item } from '@/types';
+import { Filter, Item, OptionType } from '@/types';
 import { create } from 'zustand';
 
 interface BrowseStore {
@@ -21,6 +21,14 @@ interface BrowseStore {
   setTotalCount: (totalCount: number) => void;
   totalPages: number;
   setTotalPages: (totalPages: number) => void;
+
+  needsSearch: number;
+  forceSearch: () => void;
+
+  filters: { [key in OptionType]?: Filter; };
+  setFilters: (filters:
+    ({ [key in OptionType]: Filter; })
+    | ((prev: { [key in OptionType]?: Filter; }) => ({ [key in OptionType]?: Filter; }))) => void;
 }
 
 export const useBrowseStore = create<BrowseStore>((set) => ({
@@ -38,4 +46,14 @@ export const useBrowseStore = create<BrowseStore>((set) => ({
   setLoading: (loading) => set({ loading }),
   advancedSearch: false,
   setAdvancedSearch: (advancedSearch) => set({ advancedSearch }),
+
+  filters: {},
+  setFilters: (filters) => set((state) => ({
+    filters: typeof filters === 'function'
+      ? filters(state.filters) :
+      filters
+  })),
+
+  needsSearch: 0,
+  forceSearch: () => set((state) => ({ needsSearch: state.needsSearch + 1 })),
 }));

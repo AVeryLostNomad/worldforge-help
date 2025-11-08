@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Search, Loader2, SettingsIcon } from "lucide-react";
 import { useBrowseStore } from "./store";
 import { Toggle } from "@/components/ui/toggle";
-import MultipleSelector from "@/components/ui/multiple-selector";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { FilterSelect } from "@/components/filter-select";
 import { OptionType } from "@/types";
@@ -27,7 +26,8 @@ export default function Home() {
   const setTotalPages = useBrowseStore((state) => state.setTotalPages);
   const loading = useBrowseStore((state) => state.loading);
   const setLoading = useBrowseStore((state) => state.setLoading);
-  const [needsSearch, setNeedsSearch] = useState<number>(0);
+  const needsSearch = useBrowseStore((state) => state.needsSearch);
+  const forceSearch = useBrowseStore((state) => state.forceSearch);
   const advancedSearch = useBrowseStore((state) => state.advancedSearch);
   const setAdvancedSearch = useBrowseStore((state) => state.setAdvancedSearch);
 
@@ -46,6 +46,7 @@ export default function Home() {
       setLoading(true);
 
       const advSearch = useBrowseStore.getState().advancedSearch;
+      const filters = useBrowseStore.getState().filters;
 
       const res = await fetch('/api/items', {
         method: 'POST',
@@ -53,7 +54,8 @@ export default function Home() {
         body: JSON.stringify({
           page: currentPage,
           searchQuery: useBrowseStore.getState().searchQuery,
-          advancedSearch: advSearch
+          advancedSearch: advSearch,
+          filters: Object.values(filters)
         }),
       });
       const response = await res.json();
@@ -67,12 +69,12 @@ export default function Home() {
   }, [needsSearch]);
 
   useEffect(() => {
-    setNeedsSearch((prev) => prev + 1);
+    forceSearch();
   }, [searchQuery]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    setNeedsSearch((prev) => prev + 1);
+    forceSearch();
     // Scroll to top when changing pages
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

@@ -9,6 +9,8 @@ interface FilterSelectProps {
 
 export const FilterSelect = (props: FilterSelectProps) => {
   const [options, setOptions] = useState<MultiSelectOption[]>([]);
+  const setFilters = useBrowseStore((state) => state.setFilters);
+  const forceSearch = useBrowseStore((state) => state.forceSearch);
 
   useEffect(() => {
     const process = async () => {
@@ -33,7 +35,23 @@ export const FilterSelect = (props: FilterSelectProps) => {
       className="border-2 bg-secondary"
       autoSize
       onValueChange={function (value: string[]): void {
-        console.log(value);
+        switch (props.type) {
+          case OptionType.Zone:
+            setFilters((prev) => {
+              const newFilters = { ...prev };
+              if (value && value.length > 0) {
+                newFilters[OptionType.Zone] = {
+                  type: OptionType.Zone,
+                  in: value
+                };
+              } else {
+                delete newFilters[OptionType.Zone];
+              }
+              return newFilters;
+            });
+            break;
+        }
+        forceSearch();
       }}
     />
   );

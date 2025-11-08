@@ -1,6 +1,6 @@
 'use server';
 
-import { OptionType, PaginatedResponse } from '@/types';
+import { Filter, OptionType, PaginatedResponse } from '@/types';
 import { neon } from '@neondatabase/serverless';
 
 export async function fetchDistinctOptions(type: OptionType): Promise<{ label: string, value: string; }[]> {
@@ -30,7 +30,12 @@ export async function fetchDistinctOptions(type: OptionType): Promise<{ label: s
   }
 }
 
-export async function fetchItems(page = 1, pageSize = 50, searchQuery = '', embeddings: number[] | undefined = undefined): Promise<PaginatedResponse> {
+export async function fetchItems(page = 1,
+  pageSize = 50,
+  searchQuery = '',
+  embeddings: number[] | undefined = undefined,
+  filters: Filter[] = []
+): Promise<PaginatedResponse> {
   const connectionString = process.env.NEON_DATABASE_URL;
   if (!connectionString) {
     throw new Error('Missing NEON_DATABASE_URL (or DATABASE_URL) environment variable');
@@ -41,6 +46,16 @@ export async function fetchItems(page = 1, pageSize = 50, searchQuery = '', embe
   const wheres = [];
   if (searchQuery) {
     wheres.push(`data->>'name' ILIKE '%${searchQuery}%'`);
+  }
+
+  if (filters && filters.length > 0) {
+    filters.forEach((filter) => {
+      switch (filter.type) {
+        case OptionType.Zone:
+          wheres.push(`data->>'zone' IN ('${filter.in.join("','")}')`);
+          break;
+      }
+    });
   }
 
   const whereClause = wheres.length > 0 ? sql.unsafe(`WHERE ${wheres.join(' AND ')}`) : sql``;

@@ -31,3 +31,10 @@ export interface PaginatedResponse {
 export enum OptionType {
   Zone = 'zone',
 }
+
+export type Filter = ZoneFilter;
+
+type ZoneFilter = {
+  type: OptionType.Zone;
+  in: string[];
+};

@@ -8,6 +8,7 @@ export async function POST(request: Request) {
     const pageSize = 50;
     const searchQuery = String(body.searchQuery ?? '');
     const advancedSearch = body.advancedSearch ?? false;
+    const filters = body.filters ?? [];
 
     if (advancedSearch) {
       // Search based on name filter and other filters
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       embeddings = Array.from(embedding.data);
     }
 
-    const data = await fetchItems(page, pageSize, '', embeddings);
+    const data = await fetchItems(page, pageSize, '', embeddings, filters);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching items:', error);
