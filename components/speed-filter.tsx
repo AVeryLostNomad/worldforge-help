@@ -11,6 +11,7 @@ export function SpeedFilter() {
       label="Speed"
       step={0.1}
       formatValue={(v) => v.toFixed(1)}
+      tooltip="Narrowing this range will limit results to only weapons"
     />
   );
 }

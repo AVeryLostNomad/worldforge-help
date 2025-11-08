@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 import { useBrowseStore } from "@/app/store";
 import { OptionType } from "@/types";
 
@@ -11,6 +13,7 @@ interface RangeFilterProps {
   label: string;
   step?: number;
   formatValue?: (value: number) => string;
+  tooltip?: string;
 }
 
 export function RangeFilter({
@@ -18,7 +21,8 @@ export function RangeFilter({
   apiEndpoint,
   label,
   step = 1,
-  formatValue = (v) => v.toString()
+  formatValue = (v) => v.toString(),
+  tooltip
 }: RangeFilterProps) {
   const [minRange, setMinRange] = useState<number>(0);
   const [maxRange, setMaxRange] = useState<number>(0);
@@ -96,8 +100,20 @@ export function RangeFilter({
 
   return (
     <div className="space-y-2 min-w-[200px]">
-      <label className="text-sm font-medium text-foreground">
-        {label}: {formatValue(minValue)} - {formatValue(maxValue)}
+      <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
+        <span>
+          {label}: {formatValue(minValue)} - {formatValue(maxValue)}
+        </span>
+        {tooltip && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </label>
       <div className="pt-2">
         <Slider
