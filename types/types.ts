@@ -24,6 +24,7 @@ export interface Item {
     cooldown?: string;
     description?: string;
   }>;
+  flavorText?: string;
 }
 
 export interface PaginatedResponse {

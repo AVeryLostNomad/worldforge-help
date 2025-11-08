@@ -176,6 +176,15 @@ export function ItemTooltip({ item, initialOpenAbove, anchorRect }: ItemTooltipP
         </div>
       )}
 
+      {/* Flavor Text */}
+      {item.flavorText && (
+        <div className="border-t border-gray-700 pt-1 mt-1">
+          <div className="text-gray-400 text-xs italic">
+            {item.flavorText}
+          </div>
+        </div>
+      )}
+
       {/* Requirements */}
       <div className="border-t border-gray-700 pt-1 mt-1">
         <div className="text-white text-xs">Requires Level {item.requiredLevel}</div>
