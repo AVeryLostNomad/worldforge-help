@@ -31,21 +31,22 @@ export const FilterSelect = (props: FilterSelectProps) => {
     <MultiSelect
       searchable
       options={options}
-      placeholder="Filter Zones"
+      placeholder={`Filter ${props.type.charAt(0).toUpperCase() + props.type.slice(1)}`}
       className="border-2 bg-secondary"
       autoSize
       onValueChange={function (value: string[]): void {
         switch (props.type) {
+          case OptionType.Quality:
           case OptionType.Zone:
             setFilters((prev) => {
               const newFilters = { ...prev };
               if (value && value.length > 0) {
-                newFilters[OptionType.Zone] = {
-                  type: OptionType.Zone,
+                newFilters[props.type] = {
+                  type: props.type,
                   in: value
                 };
               } else {
-                delete newFilters[OptionType.Zone];
+                delete newFilters[props.type];
               }
               return newFilters;
             });

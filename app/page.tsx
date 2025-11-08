@@ -111,8 +111,9 @@ export default function Home() {
         </div>
 
         {/* Filters - Currently not functional with pagination */}
-        <div className="mb-6 opacity-50 pointer-events-none">
+        <div className="mb-6 opacity-50 pointer-events-none flex flex-row gap-4 flex-wrap">
           <FilterSelect type={OptionType.Zone} />
+          <FilterSelect type={OptionType.Quality} />
         </div>
 
         {/* Results Count */}

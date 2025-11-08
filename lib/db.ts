@@ -24,6 +24,19 @@ export async function fetchDistinctOptions(type: OptionType): Promise<{ label: s
           label: name,
           value: name
         }));
+    case OptionType.Quality:
+      const qualities = await sql`
+        SELECT DISTINCT data->>'quality' as name
+        FROM items
+        ORDER BY name ASC
+      `;
+      return qualities
+        .map((quality) => quality.name)
+        .filter((name): name is string => name !== undefined && !!name)
+        .map((name) => ({
+          label: name,
+          value: name
+        }));
     default:
       throw new Error(`Unsupported option type: ${type}`);
       return [];
@@ -50,10 +63,15 @@ export async function fetchItems(page = 1,
 
   if (filters && filters.length > 0) {
     filters.forEach((filter) => {
-      switch (filter.type) {
-        case OptionType.Zone:
-          wheres.push(`data->>'zone' IN ('${filter.in.join("','")}')`);
-          break;
+      if (filter.in && filter.in.length > 0) {
+        switch (filter.type) {
+          case OptionType.Zone:
+            wheres.push(`data->>'zone' IN ('${filter.in.join("','")}')`);
+            break;
+          case OptionType.Quality:
+            wheres.push(`data->>'quality' IN ('${filter.in.join("','")}')`);
+            break;
+        }
       }
     });
   }
