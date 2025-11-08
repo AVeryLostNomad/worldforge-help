@@ -11,6 +11,9 @@ import { Toggle } from "@/components/ui/toggle";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { FilterSelect } from "@/components/filter-select";
 import { ItemLevelFilter } from "@/components/item-level-filter";
+import { RequiredLevelFilter } from "@/components/required-level-filter";
+import { DPSFilter } from "@/components/dps-filter";
+import { SpeedFilter } from "@/components/speed-filter";
 import { OptionType } from "@/types";
 
 export default function Home() {
@@ -118,6 +121,9 @@ export default function Home() {
           <FilterSelect type={OptionType.Zone} />
           <FilterSelect type={OptionType.Quality} />
           <ItemLevelFilter />
+          <RequiredLevelFilter />
+          <DPSFilter />
+          <SpeedFilter />
         </div>
 
         {/* Results Count */}

@@ -77,6 +77,15 @@ export async function fetchItems(page = 1,
           case OptionType.ItemLevel:
             wheres.push(`(data->>'itemLevel')::int >= ${filter.min} AND (data->>'itemLevel')::int <= ${filter.max}`);
             break;
+          case OptionType.RequiredLevel:
+            wheres.push(`(data->>'requiredLevel')::int >= ${filter.min} AND (data->>'requiredLevel')::int <= ${filter.max}`);
+            break;
+          case OptionType.DPS:
+            wheres.push(`(data->'damage'->'damagePerSecond')::numeric >= ${filter.min} AND (data->'damage'->'damagePerSecond')::numeric <= ${filter.max} AND data->'damage'->'damagePerSecond' IS NOT NULL`);
+            break;
+          case OptionType.Speed:
+            wheres.push(`(data->'damage'->'speed')::numeric >= ${filter.min} AND (data->'damage'->'speed')::numeric <= ${filter.max} AND data->'damage'->'speed' IS NOT NULL`);
+            break;
         }
       }
     });

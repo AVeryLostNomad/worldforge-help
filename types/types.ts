@@ -32,6 +32,9 @@ export enum OptionType {
   Zone = 'zone',
   Quality = 'quality',
   ItemLevel = 'itemLevel',
+  RequiredLevel = 'requiredLevel',
+  DPS = 'dps',
+  Speed = 'speed',
 }
 
 export type Filter = InFilters | RangeFilter;
@@ -42,7 +45,7 @@ type InFilters = {
 };
 
 export type RangeFilter = {
-  type: OptionType.ItemLevel;
+  type: OptionType.ItemLevel | OptionType.RequiredLevel | OptionType.DPS | OptionType.Speed;
   min: number;
   max: number;
 };
