@@ -5,8 +5,9 @@ import { ItemFilters, type FilterState } from "@/components/item-filters";
 import { ItemsTable } from "@/components/items-table";
 import { Pagination } from "@/components/pagination";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, SettingsIcon } from "lucide-react";
 import { useBrowseStore } from "./store";
+import { Toggle } from "@/components/ui/toggle";
 
 export default function Home() {
   const searchQuery = useBrowseStore((state) => state.searchQuery);
@@ -23,6 +24,8 @@ export default function Home() {
   const loading = useBrowseStore((state) => state.loading);
   const setLoading = useBrowseStore((state) => state.setLoading);
   const [needsSearch, setNeedsSearch] = useState<number>(0);
+  const advancedSearch = useBrowseStore((state) => state.advancedSearch);
+  const setAdvancedSearch = useBrowseStore((state) => state.setAdvancedSearch);
 
   // Load filter options on mount
   // useEffect(() => {
@@ -37,12 +40,16 @@ export default function Home() {
   useEffect(() => {
     const searchDebounce = setTimeout(async () => {
       setLoading(true);
+
+      const advSearch = useBrowseStore.getState().advancedSearch;
+
       const res = await fetch('/api/items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           page: currentPage,
-          searchQuery: useBrowseStore.getState().searchQuery ?? '',
+          searchQuery: useBrowseStore.getState().searchQuery,
+          advancedSearch: advSearch
         }),
       });
       const response = await res.json();
@@ -75,15 +82,25 @@ export default function Home() {
         </div>
 
         <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search items by name or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+          <div className="relative flex-row flex gap-2 w-full">
+            <Toggle
+              pressed={advancedSearch ?? false}
+              onPressedChange={(checked) => setAdvancedSearch(checked)}
+              className="data-[state=on]:bg-green-400 data-[state=off]:bg-green-100/50"
+            >
+              <SettingsIcon />
+              {advancedSearch ? 'Advanced Search' : 'Basic Search'}
+            </Toggle>
+            <div className="relative grow">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={advancedSearch ? "Filter items by name..." : "Search for items in plain english..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
           </div>
         </div>
 

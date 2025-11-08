@@ -14,6 +14,9 @@ interface BrowseStore {
   items: Item[];
   setItems: (items: Item[]) => void;
 
+  advancedSearch?: boolean;
+  setAdvancedSearch: (advancedSearch: boolean) => void;
+
   totalCount: number;
   setTotalCount: (totalCount: number) => void;
   totalPages: number;
@@ -21,7 +24,7 @@ interface BrowseStore {
 }
 
 export const useBrowseStore = create<BrowseStore>((set) => ({
-  searchQuery: 'Mal',
+  searchQuery: '',
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   currentPage: 1,
   setCurrentPage: (currentPage) => set({ currentPage }),
@@ -33,4 +36,6 @@ export const useBrowseStore = create<BrowseStore>((set) => ({
   setTotalPages: (totalPages) => set({ totalPages }),
   loading: false,
   setLoading: (loading) => set({ loading }),
+  advancedSearch: false,
+  setAdvancedSearch: (advancedSearch) => set({ advancedSearch }),
 }));
