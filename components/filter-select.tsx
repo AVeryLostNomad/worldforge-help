@@ -38,6 +38,9 @@ export const FilterSelect = (props: FilterSelectProps) => {
         switch (props.type) {
           case OptionType.Quality:
           case OptionType.Zone:
+          case OptionType.SlotType:
+          case OptionType.ItemType:
+          case OptionType.Slot:
             setFilters((prev) => {
               const newFilters = { ...prev };
               if (value && value.length > 0) {

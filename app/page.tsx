@@ -120,6 +120,9 @@ export default function Home() {
         <div className="mb-6 flex flex-row gap-4 flex-wrap">
           <FilterSelect type={OptionType.Zone} />
           <FilterSelect type={OptionType.Quality} />
+          <FilterSelect type={OptionType.SlotType} />
+          <FilterSelect type={OptionType.ItemType} />
+          <FilterSelect type={OptionType.Slot} />
           <ItemLevelFilter />
           <RequiredLevelFilter />
           <DPSFilter />

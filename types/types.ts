@@ -37,6 +37,9 @@ export interface PaginatedResponse {
 export enum OptionType {
   Zone = 'zone',
   Quality = 'quality',
+  SlotType = 'slotType',
+  ItemType = 'itemType',
+  Slot = 'slot',
   ItemLevel = 'itemLevel',
   RequiredLevel = 'requiredLevel',
   DPS = 'dps',
@@ -46,7 +49,7 @@ export enum OptionType {
 export type Filter = InFilters | RangeFilter;
 
 type InFilters = {
-  type: OptionType.Zone | OptionType.Quality;
+  type: OptionType.Zone | OptionType.Quality | OptionType.SlotType | OptionType.ItemType | OptionType.Slot;
   in: string[];
 };
 

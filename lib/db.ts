@@ -37,6 +37,45 @@ export async function fetchDistinctOptions(type: OptionType): Promise<{ label: s
           label: name,
           value: name
         }));
+    case OptionType.SlotType:
+      const slotTypes = await sql`
+        SELECT DISTINCT data->>'slotType' as name
+        FROM items
+        ORDER BY name ASC
+      `;
+      return slotTypes
+        .map((slotType) => slotType.name)
+        .filter((name): name is string => name !== undefined && !!name)
+        .map((name) => ({
+          label: name,
+          value: name
+        }));
+    case OptionType.ItemType:
+      const itemTypes = await sql`
+        SELECT DISTINCT data->>'itemType' as name
+        FROM items
+        ORDER BY name ASC
+      `;
+      return itemTypes
+        .map((itemType) => itemType.name)
+        .filter((name): name is string => name !== undefined && !!name)
+        .map((name) => ({
+          label: name,
+          value: name
+        }));
+    case OptionType.Slot:
+      const slots = await sql`
+        SELECT DISTINCT data->>'slot' as name
+        FROM items
+        ORDER BY name ASC
+      `;
+      return slots
+        .map((slot) => slot.name)
+        .filter((name): name is string => name !== undefined && !!name)
+        .map((name) => ({
+          label: name,
+          value: name
+        }));
     default:
       throw new Error(`Unsupported option type: ${type}`);
       return [];
@@ -70,6 +109,15 @@ export async function fetchItems(page = 1,
             break;
           case OptionType.Quality:
             wheres.push(`data->>'quality' IN ('${filter.in.join("','")}')`);
+            break;
+          case OptionType.SlotType:
+            wheres.push(`data->>'slotType' IN ('${filter.in.join("','")}')`);
+            break;
+          case OptionType.ItemType:
+            wheres.push(`data->>'itemType' IN ('${filter.in.join("','")}')`);
+            break;
+          case OptionType.Slot:
+            wheres.push(`data->>'slot' IN ('${filter.in.join("','")}')`);
             break;
         }
       } else if ('min' in filter && 'max' in filter) {
