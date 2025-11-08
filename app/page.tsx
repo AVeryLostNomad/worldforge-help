@@ -61,7 +61,7 @@ export default function Home() {
           page: currentPage,
           searchQuery: useBrowseStore.getState().searchQuery,
           advancedSearch: advSearch,
-          filters: allFilters
+          filters: advSearch ? allFilters : []
         }),
       });
       const response = await res.json();

@@ -9,8 +9,13 @@ interface FilterSelectProps {
 
 export const FilterSelect = (props: FilterSelectProps) => {
   const [options, setOptions] = useState<MultiSelectOption[]>([]);
+  const filters = useBrowseStore((state) => state.filters);
   const setFilters = useBrowseStore((state) => state.setFilters);
   const forceSearch = useBrowseStore((state) => state.forceSearch);
+
+  // Get the current filter value from store
+  const currentFilter = filters[props.type];
+  const defaultValue = currentFilter && 'in' in currentFilter ? currentFilter.in : [];
 
   useEffect(() => {
     const process = async () => {
@@ -34,6 +39,7 @@ export const FilterSelect = (props: FilterSelectProps) => {
       placeholder={`Filter ${props.type.charAt(0).toUpperCase() + props.type.slice(1)}`}
       className="border-2 bg-secondary"
       autoSize
+      defaultValue={defaultValue}
       onValueChange={function (value: string[]): void {
         switch (props.type) {
           case OptionType.Quality:
