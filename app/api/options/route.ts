@@ -8,8 +8,6 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
     const type = body.type ?? '';
 
-    console.log(type);
-
     if (!type) {
       return NextResponse.json({ error: 'Type is required' }, { status: 400 });
     }

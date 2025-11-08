@@ -10,12 +10,6 @@ export async function POST(request: Request) {
     const advancedSearch = body.advancedSearch ?? false;
     const filters = body.filters ?? [];
 
-    if (advancedSearch) {
-      // Search based on name filter and other filters
-      const data = await fetchItems(page, pageSize, searchQuery);
-      return NextResponse.json(data);
-    }
-
     let embeddings: number[] | undefined = undefined;
     if (searchQuery && searchQuery.trim().length > 0) {
       const { pipeline } = await import('@xenova/transformers');

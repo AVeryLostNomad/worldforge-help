@@ -76,7 +76,7 @@ export default function Home() {
 
   useEffect(() => {
     forceSearch();
-  }, [searchQuery]);
+  }, [searchQuery, advancedSearch]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -89,8 +89,10 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 space-y-2">
-          <h1 className="text-4xl font-bold text-foreground">Equipment Browser</h1>
-          <p className="text-muted-foreground">Browse and filter equipment items from the Badlands zone</p>
+          <h1 className="text-4xl font-bold text-foreground">Worldforged Help</h1>
+          <p className="text-muted-foreground">{
+            `Browse worldforged items. ${advancedSearch ? 'Click the search mode button to return to simple english search.' : 'Click the search mode button to go to advanced filter search.'}`
+          }</p>
         </div>
 
         <div className="mb-6">

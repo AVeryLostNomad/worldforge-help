@@ -38,8 +38,6 @@ describe('fetchItems (server)', () => {
     const { fetchDistinctOptions } = await import('@/lib/db');
     const zoneOptions = await fetchDistinctOptions(OptionType.Zone);
 
-    console.log(zoneOptions);
-
     expect(zoneOptions).toBeDefined();
     expect(Array.isArray(zoneOptions)).toBe(true);
     expect(zoneOptions.length).toBeGreaterThan(0);
@@ -58,7 +56,6 @@ describe('fetchItems (server)', () => {
     // All items should have a "mana" key in secondaryStats object
     for (const item of result.items) {
       expect(item.secondaryStats).toBeDefined();
-      console.log(item);
       expect(Object.keys(item.secondaryStats!)).toContain('mana');
     }
   });
