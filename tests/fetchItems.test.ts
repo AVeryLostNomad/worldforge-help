@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { pipeline } from "@xenova/transformers";
 
 import { fetchItems } from '@/lib/db';
-import { OptionType } from '@/types';
+import { Filter, OptionType } from '@/types';
 
 describe('fetchItems (server)', () => {
   it('returns items and pagination structure', async () => {
@@ -43,5 +43,23 @@ describe('fetchItems (server)', () => {
     expect(zoneOptions).toBeDefined();
     expect(Array.isArray(zoneOptions)).toBe(true);
     expect(zoneOptions.length).toBeGreaterThan(0);
+  });
+
+  it('filters items by secondary stat "mana"', async () => {
+    // Filter on "mana" secondary stat
+    const filters = [{
+      type: OptionType.SecondaryStats,
+      in: ['mana']
+    } as Filter];
+    const result = await fetchItems(1, 10, '', undefined, filters);
+
+    expect(result.items.length).toBeGreaterThan(0);
+
+    // All items should have a "mana" key in secondaryStats object
+    for (const item of result.items) {
+      expect(item.secondaryStats).toBeDefined();
+      console.log(item);
+      expect(Object.keys(item.secondaryStats!)).toContain('mana');
+    }
   });
 });
