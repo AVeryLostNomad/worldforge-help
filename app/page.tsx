@@ -98,10 +98,13 @@ export default function Home() {
             <Toggle
               pressed={advancedSearch ?? false}
               onPressedChange={(checked) => setAdvancedSearch(checked)}
-              className="data-[state=on]:bg-green-400 data-[state=off]:bg-green-100/50"
+              variant="outline"
+              className="h-10 px-4 gap-2 border-input bg-background shadow-xs data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary data-[state=off]:hover:bg-accent data-[state=off]:hover:text-accent-foreground transition-all"
             >
-              <SettingsIcon />
-              {advancedSearch ? 'Advanced Search' : 'Basic Search'}
+              <SettingsIcon className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {advancedSearch ? 'Advanced Search' : 'Basic Search'}
+              </span>
             </Toggle>
             <div className="relative grow">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
