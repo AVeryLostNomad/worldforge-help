@@ -3,6 +3,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ItemTooltip } from "./item-tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { Item } from "@/types";
 
@@ -84,7 +85,20 @@ export function ItemsTable({ items }: ItemsTableProps) {
                     <span className="text-muted-foreground">—</span>
                   )}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{item.zone}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help">{item.zone}</span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {item.coords && item.coords.length > 0
+                          ? `Coordinates: (${item.coords.join(", ")})`
+                          : "No coordinates available"}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TableCell>
               </TableRow>
             ))
           )}
